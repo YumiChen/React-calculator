@@ -1,6 +1,3 @@
-## **React calculator**
-React.js practice:
-
- A calculator which changes background color whenever something is inputed.
-
+## **React calculator**  
+React.js practice  
 [**Demo**](http://codepen.io/Yumichen/pen/WpVNLq)
