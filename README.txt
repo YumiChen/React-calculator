@@ -1,3 +1,3 @@
-A Pen created at CodePen.io. You can find this one at http://codepen.io/Yumichen/pen/WpVNLq.
-
- 
+##React.js practice
+A calculator which changes background color whenever something is inputed.
+Demo:http://codepen.io/Yumichen/pen/WpVNLq. 
