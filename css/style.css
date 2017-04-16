@@ -1,0 +1,148 @@
+* {
+  position: relative;
+  box-sizing: border-box;
+  font-family: Dosis;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.02em;
+}
+
+body, html {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.app {
+  width: 38%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.15);
+}
+.app .input .prev {
+  margin: 0;
+  padding-right: 1em;
+  height: 3em;
+  line-height: 3em;
+  text-align: right;
+}
+.app .input .calc {
+  width: 80%;
+  height: 1.5em;
+  line-height: 1.5em;
+  padding: 0.5em;
+  padding-top: 0;
+  margin: 0 auto;
+  font-size: 3em;
+  overflow: hidden;
+  border-bottom: dashed 2px;
+  font-weight: 500;
+  font-family: Concert One;
+  -webkit-touch-callout: auto;
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+.app .evals {
+  display: flex;
+  width: 100%;
+}
+.app .evals .key {
+  width: 33.3%;
+}
+.app .box {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.app .box .nums {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.app .box .key {
+  width: 33.3%;
+}
+.app .box .operators {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+}
+.app .box .operators .key {
+  width: 100%;
+}
+.app .color {
+  width: 100%;
+  padding: 0.5em;
+}
+.app .color .bgc {
+  border: solid 1px;
+  display: inline-block;
+  width: 43%;
+  padding: 0.2em;
+  -webkit-touch-callout: auto;
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+.app .color .copy {
+  padding: 0.2em;
+  border: solid 1px;
+  display: inline-block;
+  width: 25%;
+  cursor: pointer;
+  background-color: #fff;
+}
+.app .color .toggle {
+  display: inline-block;
+  width: 18%;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.2em;
+}
+
+.key {
+  height: 4em;
+  cursor: pointer;
+  line-height: 4.5em;
+}
+.key:hover {
+  color: SkyBlue;
+}
+
+@media screen and (max-width: 480px) {
+  body, html {
+    height: 91vh;
+  }
+
+  .app {
+    width: 90%;
+  }
+
+  .key {
+    height: 3.5em;
+    line-height: 3.5em;
+  }
+
+  .color {
+    margin: 0.5em;
+  }
+
+  .app .input .calc {
+    height: 1.7em;
+    line-height: 1.7em;
+  }
+}

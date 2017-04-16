@@ -1,0 +1,203 @@
+//components
+const Input = React.createClass({
+  render: function(){
+    return (
+    <div className="input">
+    <p className="prev">{this.props.prevString}</p>
+    <p className="calc">{this.props.calcString}</p>
+      </div>
+    );
+  }
+});
+
+const Key = React.createClass({
+  render: function(){
+    return <div className="key" onClick={this.props.onClick}>{this.props.content}</div>;
+  }
+});
+
+const Nums = React.createClass({
+  render: function(){
+    return (
+    <div className ="nums">
+    <Key content = "1" onClick = {this.props.Input}/>
+    <Key content = "2" onClick = {this.props.Input}/>
+    <Key content = "3" onClick = {this.props.Input}/>
+    <Key content = "4" onClick = {this.props.Input}/>
+    <Key content = "5" onClick ={this.props.Input}/>
+    <Key content = "6" onClick = {this.props.Input}/>
+    <Key content = "7" onClick = {this.props.Input}/>
+    <Key content = "8" onClick = {this.props.Input}/>
+    <Key content = "9" onClick ={this.props.Input}/>
+    <Key content = "0" onClick = {this.props.Input}/>
+    <Key content = "." onClick = {this.props.Input}/>
+    <Key content = "00" onClick = {this.props.Input}/>     
+    </div>
+    );
+  }
+});
+
+const Operators = React.createClass({
+  render: function(){
+    return (
+    <div className = "operators">
+    <Key content = "+" onClick = {this.props.Input}/>
+    <Key content = "-" onClick = {this.props.Input}/>
+    <Key content = "*" onClick = {this.props.Input}/>
+    <Key content = "/" onClick = {this.props.Input}/>
+    </div>
+    );
+  }
+});
+
+const Evals = React.createClass({
+  render: function(){
+    return (
+    <div className = "evals">
+      <Key content = "C" onClick = {this.props.clear}/>
+      <Key content = "DEL" onClick = {this.props.del}/>
+      <Key content = "=" onClick = {this.props.calc}/>
+    </div>
+    );
+  }
+});
+
+const Toggle = React.createClass({
+  render: function(){
+    return (<span className = "toggle" onClick = {this.props.onClick}>{this.props.colorType}</span>);
+  }
+});
+
+const Color = React.createClass({
+  render: function(){
+    return (
+      <p className = "color">
+      <Toggle colorType = {this.props.colorType} onClick = {this.props.toggle}/>
+      <span className = "bgc">{this.props.color}</span>
+    <span className = "copy" style={{color:this.props.color, backgroundColor: this.props.textColor, borderColor: this.props.textColor}} onClick={this.props.copy}>COPY</span>
+    </p>
+    );
+  }
+});
+
+const Keyboard = React.createClass({
+    render: function(){
+  return (
+        <div className = "keyborad">
+    <Evals clear={this.props.clear} del={this.props.del} calc = {this.props.calc}/>  
+    <div className = "box">
+    <Nums Input = {this.props.Input}/>
+    <Operators Input = {this.props.Input}/>
+    <Color colorType = {this.props.colorType} color = {this.props.color} textColor = {this.props.textColor} copy = {this.props.copy} toggle = {this.props.toggle}/>
+      </div>
+      </div>
+    );
+  }
+});
+
+// putting together
+const App = React.createClass({
+  getInitialState: function(){
+    return {
+      prevString: "",
+      calcString: "",
+      color:"#2abacd",
+      textColor:"#fff",
+      colorType: "HEX ▸"
+    };
+  },
+// Methods
+  Input: function(e){
+    let string = this.state.calcString + e.target.innerHTML;
+    this.setState({calcString : string});
+    this.shine();
+  },
+  clear: function(){        
+    this.setState({
+      calcString:"",
+      prevString:""});
+  }
+  ,
+  del: function(){
+    let string = this.state.calcString.slice(0,-1);
+    this.setState({calcString:string});
+  },
+  calc: function(){
+	let result = eval(this.state.calcString),         
+      prev = this.state.calcString;
+	this.setState({calcString: result, prevString: prev});
+  },
+  hexToRgb: function(hex) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+  ,
+rgbToHex: function(color) {
+if (color.charAt(0) === "#") {
+return color; }
+
+let nums = /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/i.exec(color),
+    r = parseInt(nums[2], 10).toString(16), 
+    g = parseInt(nums[3], 10).toString(16), 
+    b = parseInt(nums[4], 10).toString(16);
+
+return "#"+ ( (r.length == 1 ? "0"+ r : r) + (g.length == 1 ? "0"+ g : g) + (b.length == 1 ? "0"+ b : b) ); 
+
+},
+  
+  shine: function(){
+    let body = document.querySelector('body'),
+        color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6),
+        rgb = this.hexToRgb(color),      rgbColor = `rgb(${rgb.r},${rgb.g},${rgb.b})`,
+        colorType=this.state.colorType;
+
+   let o = Math.round(((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000);
+
+(o > 180) ? this.state.textColor="#594741": this.state.textColor="#fff";
+
+    colorType == "HEX ▸" ?
+    this.setState({color: color}):this.setState({color: rgbColor})
+  },
+  copy: function(){
+  let copyArea = document.querySelector('.bgc'),
+      range = document.createRange(); 
+      range.selectNode(copyArea); 
+      window.getSelection().addRange(range);
+      document.execCommand("Copy"); 
+  },
+  toggle: function(){
+    let color = this.state.color,
+        colorType = this.state.colorType;
+    
+    if(colorType == "HEX ▸"){
+      let rgb = this.hexToRgb(color), 
+          rgbColor = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+      
+      this.setState({colorType:"◂  RGB",color:rgbColor});
+    }else{
+      let hexColor = this.rgbToHex(color);
+      this.setState({colorType:"HEX ▸",color:hexColor});
+    }
+  },
+
+// Render app
+  render: function(){
+  document.querySelector('body').style.backgroundColor=this.state.color;  document.querySelector('body').style.color=this.state.textColor;
+    
+    return (
+    <div className="app">
+    
+    <Input prevString={this.state.prevString} calcString={this.state.calcString}/>
+    
+    <Keyboard Input = {this.Input} colorType = {this.state.colorType} color = {this.state.color} textColor = {this.state.textColor} copy = {this.copy} toggle = {this.toggle} calc={this.calc} del={this.del} clear = {this.clear}/>
+        
+    </div>
+    );
+  }
+});
+
+ReactDOM.render(<App/>,document.querySelector('body'));
