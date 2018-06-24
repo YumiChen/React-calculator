@@ -1,133 +1,148 @@
+import React, {Component} from "react";
+import {render} from "react-dom";
+
+import "./assets/stylesheets/style.sass";
+
 //components
-const Input = React.createClass({
-  render: function(){
+const Input = props=>{
     return (
     <div className="input">
-    <p className="prev">{this.props.prevString}</p>
-    <p className="calc">{this.props.calcString}</p>
+    <p className="prev">{props.prevString}</p>
+    <p className="calc"><span>{props.calcString}</span></p>
       </div>
     );
   }
-});
 
-const Key = React.createClass({
-  render: function(){
-    return <div className="key" onClick={this.props.onClick}>{this.props.content}</div>;
+const Key = props=>{
+    return <div className="key" onClick={props.onClick}>{props.content}</div>;
   }
-});
 
-const Nums = React.createClass({
-  render: function(){
+const Numbers = props=>{
+  for(var i = 1;i<=12;i++){
+    var content;
+    if(i==10) content = "0";
+    else if(i==11) content = ".";
+    else if(i==12) content = "00";
+    else content = i;
+    
+    (props=>{
+      return (<Key key = {i} content = {content} onClick = {props.onClick}/>)
+    })();
+  }
+}
+
+const Nums = props=>{
+    let numbers = [];
+    for(var i = 1;i<=12;i++){
+    let content = "";
+    if(i==10) content = "0";
+    else if(i==11) content = ".";
+    else if(i==12) content = "00";
+    else content = i;
+      
+    numbers.push(
+      <Key content = {content} onClick = {props.Input}/>
+    );
+    }
+  
     return (
     <div className ="nums">
-    <Key content = "1" onClick = {this.props.Input}/>
-    <Key content = "2" onClick = {this.props.Input}/>
-    <Key content = "3" onClick = {this.props.Input}/>
-    <Key content = "4" onClick = {this.props.Input}/>
-    <Key content = "5" onClick ={this.props.Input}/>
-    <Key content = "6" onClick = {this.props.Input}/>
-    <Key content = "7" onClick = {this.props.Input}/>
-    <Key content = "8" onClick = {this.props.Input}/>
-    <Key content = "9" onClick ={this.props.Input}/>
-    <Key content = "0" onClick = {this.props.Input}/>
-    <Key content = "." onClick = {this.props.Input}/>
-    <Key content = "00" onClick = {this.props.Input}/>     
+      {numbers}
     </div>
     );
   }
-});
 
-const Operators = React.createClass({
-  render: function(){
+const Operators = props=>{
     return (
     <div className = "operators">
-    <Key content = "+" onClick = {this.props.Input}/>
-    <Key content = "-" onClick = {this.props.Input}/>
-    <Key content = "*" onClick = {this.props.Input}/>
-    <Key content = "/" onClick = {this.props.Input}/>
+    <Key content = "+" onClick = {props.Input}/>
+    <Key content = "-" onClick = {props.Input}/>
+    <Key content = "*" onClick = {props.Input}/>
+    <Key content = "/" onClick = {props.Input}/>
     </div>
     );
   }
-});
 
-const Evals = React.createClass({
-  render: function(){
+const Evals = props=>{
     return (
     <div className = "evals">
-      <Key content = "C" onClick = {this.props.clear}/>
-      <Key content = "DEL" onClick = {this.props.del}/>
-      <Key content = "=" onClick = {this.props.calc}/>
+      <Key content = "C" onClick = {props.clear}/>
+      <Key content = "DEL" onClick = {props.del}/>
+      <Key content = "=" onClick = {props.calc}/>
     </div>
     );
-  }
-});
+}
 
-const Toggle = React.createClass({
-  render: function(){
-    return (<span className = "toggle" onClick = {this.props.onClick}>{this.props.colorType}</span>);
+const Toggle = props=>{
+    return (<span className = "toggle" onClick = {props.onClick}>{props.colorType}</span>);
   }
-});
 
-const Color = React.createClass({
-  render: function(){
+const Color = props=>{
     return (
       <p className = "color">
-      <Toggle colorType = {this.props.colorType} onClick = {this.props.toggle}/>
-      <span className = "bgc">{this.props.color}</span>
-    <span className = "copy" style={{color:this.props.color, backgroundColor: this.props.textColor, borderColor: this.props.textColor}} onClick={this.props.copy}>COPY</span>
+      <Toggle colorType = {props.colorType} onClick = {props.toggle}/>
+      <span className = "bgc">{props.color}</span>
+    <span className = "copy" style={{color:props.color, backgroundColor: props.textColor, borderColor: props.textColor}} onClick={props.copy}>COPY</span>
     </p>
     );
   }
-});
 
-const Keyboard = React.createClass({
-    render: function(){
+const Keyboard = props=>{
   return (
         <div className = "keyborad">
-    <Evals clear={this.props.clear} del={this.props.del} calc = {this.props.calc}/>  
+    <Evals clear={props.clear} del={props.del} calc = {props.calc}/>  
     <div className = "box">
-    <Nums Input = {this.props.Input}/>
-    <Operators Input = {this.props.Input}/>
-    <Color colorType = {this.props.colorType} color = {this.props.color} textColor = {this.props.textColor} copy = {this.props.copy} toggle = {this.props.toggle}/>
+    <Nums Input = {props.Input}/>
+    <Operators Input = {props.Input}/>
+    <Color colorType = {props.colorType} color = {props.color} textColor = {props.textColor} copy = {props.copy} toggle = {props.toggle}/>
       </div>
       </div>
     );
   }
-});
 
 // putting together
-const App = React.createClass({
-  getInitialState: function(){
-    return {
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
       prevString: "",
       calcString: "",
       color:"#2abacd",
       textColor:"#fff",
       colorType: "HEX ▸"
     };
-  },
+    //binding "this"
+    this.Input = this.Input.bind(this);
+    this.clear = this.clear.bind(this);
+    this.del = this.del.bind(this);
+    this.calc = this.calc.bind(this);
+    this.hexToRgb = this.hexToRgb.bind(this);
+    this.rgbToHex = this.rgbToHex.bind(this);
+    this.shine = this.shine.bind(this);
+    this.copy = this.copy.bind(this);
+    this.toggle = this.toggle.bind(this);
+  }
 // Methods
-  Input: function(e){
+  Input(e){
     let string = this.state.calcString + e.target.innerHTML;
     this.setState({calcString : string});
     this.shine();
-  },
-  clear: function(){        
+  }
+  clear(){        
     this.setState({
       calcString:"",
       prevString:""});
   }
-  ,
-  del: function(){
+  del(){
     let string = this.state.calcString.slice(0,-1);
     this.setState({calcString:string});
-  },
-  calc: function(){
+  }
+  calc(){
 	let result = eval(this.state.calcString),         
       prev = this.state.calcString;
 	this.setState({calcString: result, prevString: prev});
-  },
-  hexToRgb: function(hex) {
+  }
+  hexToRgb(hex) {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
         r: parseInt(result[1], 16),
@@ -135,8 +150,7 @@ const App = React.createClass({
         b: parseInt(result[3], 16)
     } : null;
 }
-  ,
-rgbToHex: function(color) {
+  rgbToHex(color) {
 if (color.charAt(0) === "#") {
 return color; }
 
@@ -147,9 +161,8 @@ let nums = /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/i.exec(color),
 
 return "#"+ ( (r.length == 1 ? "0"+ r : r) + (g.length == 1 ? "0"+ g : g) + (b.length == 1 ? "0"+ b : b) ); 
 
-},
-  
-  shine: function(){
+}
+  shine(){
     let body = document.querySelector('body'),
         color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6),
         rgb = this.hexToRgb(color),      rgbColor = `rgb(${rgb.r},${rgb.g},${rgb.b})`,
@@ -161,15 +174,15 @@ return "#"+ ( (r.length == 1 ? "0"+ r : r) + (g.length == 1 ? "0"+ g : g) + (b.l
 
     colorType == "HEX ▸" ?
     this.setState({color: color}):this.setState({color: rgbColor})
-  },
-  copy: function(){
+  }
+  copy(){
   let copyArea = document.querySelector('.bgc'),
       range = document.createRange(); 
       range.selectNode(copyArea); 
       window.getSelection().addRange(range);
       document.execCommand("Copy"); 
-  },
-  toggle: function(){
+  }
+  toggle(){
     let color = this.state.color,
         colorType = this.state.colorType;
     
@@ -182,10 +195,10 @@ return "#"+ ( (r.length == 1 ? "0"+ r : r) + (g.length == 1 ? "0"+ g : g) + (b.l
       let hexColor = this.rgbToHex(color);
       this.setState({colorType:"HEX ▸",color:hexColor});
     }
-  },
+  }
 
 // Render app
-  render: function(){
+  render(){
   document.querySelector('body').style.backgroundColor=this.state.color;  document.querySelector('body').style.color=this.state.textColor;
     
     return (
@@ -198,6 +211,6 @@ return "#"+ ( (r.length == 1 ? "0"+ r : r) + (g.length == 1 ? "0"+ g : g) + (b.l
     </div>
     );
   }
-});
+}
 
-ReactDOM.render(<App/>,document.querySelector('body'));
+render(<App/>,document.querySelector('body'));
